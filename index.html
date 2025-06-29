@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Data-Check | Real Estate Due Diligence Tool</title>
+    <style>
+        :root {
+            --primary-color: #0d47a1; /* Deep Blue */
+            --secondary-color: #1565c0; /* Medium Blue */
+            --accent-color: #1976d2; /* Lighter Blue */
+            --light-grey: #f5f5f5;
+            --medium-grey: #e0e0e0;
+            --dark-grey: #424242;
+            --success-color: #2e7d32;
+            --warning-color: #d32f2f;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .property-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .property-info label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .property-info input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-grey);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .checklist-section {
+            margin-bottom: 30px;
+            border: 1px solid var(--medium-grey);
+            border-radius: 6px;
+        }
+        .checklist-section h2 {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-size: 1.4em;
+            border-bottom: 1px solid var(--medium-grey);
+            border-radius: 6px 6px 0 0;
+        }
+        .check-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            padding: 20px;
+            align-items: center;
+            border-bottom: 1px solid var(--medium-grey);
+        }
+        .check-item:last-child {
+            border-bottom: none;
+        }
+        .check-item-content p {
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
+        .check-item-content .description {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin: 0;
+        }
+        .check-item-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .check-item-content a:hover {
+            text-decoration: underline;
+        }
+        .check-item .actions select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--medium-grey);
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-verified { border-left: 5px solid var(--success-color); }
+        .status-discrepancy { border-left: 5px solid var(--warning-color); }
+
+        .print-button-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .print-button {
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .print-button:hover {
+            background-color: #1b5e20;
+        }
+
+        @media print {
+            body { padding: 0; }
+            .print-button-container { display: none; }
+            .container { box-shadow: none; border: 1px solid var(--medium-grey); }
+            .check-item .actions select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border: none;
+                background: transparent;
+            }
+        }
+        @media (max-width: 600px) {
+            .property-info { grid-template-columns: 1fr; }
+            .check-item { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        function updateStatus(selectElement) {
+            const item = selectElement.closest('.check-item');
+            item.classList.remove('status-verified', 'status-discrepancy');
+            if (selectElement.value === 'verified') {
+                item.classList.add('status-verified');
+            } else if (selectElement.value === 'discrepancy') {
+                item.classList.add('status-discrepancy');
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Property Data-Check</h1>
+            <p>A simple due diligence tool for real estate investors.</p>
+        </header>
+
+        <main class="main-content">
+            <section class="property-info">
+                <div>
+                    <label for="address">Property Address</label>
+                    <input type="text" id="address" placeholder="e.g., 123 Main St, Anytown, USA">
+                </div>
+                <div>
+                    <label for="parcel-id">Parcel ID / APN</label>
+                    <input type="text" id="parcel-id" placeholder="e.g., 01-23-456-789">
+                </div>
+            </section>
+
+            <section class="checklist-section">
+                <h2>📍 Positional Accuracy</h2>
+                <div class="check-item">
+                    <div class="check-item-content">
+                        <p>Visually inspect parcel lines on satellite imagery.</p>
+                        <span class="description">Use a tool like <a href="https://earth.google.com/" target="_blank">Google Earth</a> to check if boundaries align with real-world features like fences, roads, and buildings.</span>
+                    </div>
+                    <div class="actions">
+                        <select onchange="updateStatus(this)">
+                            <option value="unchecked">Unchecked</option>
+                            <option value="verified">Looks Good</option>
+                            <option value="discrepancy">Discrepancy Found</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="checklist-section">
+                <h2>🏷️ Attribute Accuracy</h2>
+                <div class="check-item">
+                    <div class="check-item-content">
+                        <p>Verify ownership and tax data.</p>
+                        <span class="description">Cross-reference with the official <a href="https://www.google.com/search?q=my+county+property+assessor" target="_blank">County Assessor's website</a>. Check for correct owner name and tax status.</span>
+                    </div>
+                    <div class="actions">
+                        <select onchange="updateStatus(this)">
+                            <option value="unchecked">Unchecked</option>
+                            <option value="verified">Verified</option>
+                            <option value="discrepancy">Discrepancy Found</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-item-content">
+                        <p>Verify zoning and land use designation.</p>
+                        <span class="description">Do not trust the GIS layer alone. Check the official <a href="https://www.google.com/search?q=my+county+planning+and+zoning+department" target="_blank">County Planning/Zoning map</a>.</span>
+                    </div>
+                    <div class="actions">
+                        <select onchange="updateStatus(this)">
+                            <option value="unchecked">Unchecked</option>
+                            <option value="verified">Verified</option>
+                            <option value="discrepancy">Discrepancy Found</option>
+                            <option value="na">N/A</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="checklist-section">
+                <h2>⏳ Temporal Accuracy</h2>
+                <div class="check-item">
+                    <div class="check-item-content">
+                        <p>Check for recent sales and permit activity.</p>
+                        <span class="description">Public records may not reflect a sale from last month. Check the recorder's office for very recent transactions or the building dept. for new permits.</span>
+                    </div>
+                    <div class="actions">
+                        <select onchange="updateStatus(this)">
+                            <option value="unchecked">Unchecked</option>
+                            <option value="verified">Verified - Up to Date</option>
+                            <option value="discrepancy">Outdated Info Found</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+             <section class="checklist-section">
+                <h2>🔗 Topological Accuracy</h2>
+                <div class="check-item">
+                    <div class="check-item-content">
+                        <p>Check for gaps or overlaps with neighbors.</p>
+                        <span class="description">In your county's GIS viewer, look closely at the subject property and its neighbors. Ensure there are no strange gaps or overlapping lines.</span>
+                    </div>
+                    <div class="actions">
+                        <select onchange="updateStatus(this)">
+                            <option value="unchecked">Unchecked</option>
+                            <option value="verified">Looks Good</option>
+                            <option value="discrepancy">Error Found</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <div class="print-button-container">
+                <button class="print-button" onclick="window.print()">Print Verification Report</button>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
